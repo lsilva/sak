@@ -1,0 +1,21 @@
+<?php
+namespace Sgc\Routes\Controllers;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Silex\Application;
+use Silex\ControllerProviderInterface;
+
+/**
+ * @package SClinica
+ * @pattern PATTNER
+ */
+class NAMECONTROLLER {
+    public function get (Request $request, Application $app) {
+        return new Response('Method not allowed', 405);
+    }
+
+    public function post (Request $request, Application $app) {
+        return new Response('Method not allowed', 405);
+    }
+}
