@@ -3,14 +3,15 @@ namespace SAK\Doctrine;
 
 class DoctrineConfig{
 
-	public static function getORMOption(){
+	public static function getORMOption($root_path){
+		$config = self::getDBOptionStatic($root_path);
 
 		return array(
 		    'mappings' => array(
 		        array(
 		            'type' => 'annotation',
-		            'path' => $this->getDBOptionStatic()['path_entities'],
-		            'namespace' => $this->getDBOptionStatic()['namespace'],
+		            'path' => $config['path_entities'],
+		            'namespace' => $config['namespace'],
 		        ),
 		    ),
 		);
@@ -22,14 +23,14 @@ class DoctrineConfig{
 		//Fazer um curl para intranet pegando as informacoes de base
 	}
 
-	public static function getDBOptionStatic(){
-		require_once __DIR__."/../../Config/config.php";
+	public static function getDBOptionStatic($root_path){
+		require "{$root_path}/Config/config.php";
+
 		return $DBOptionConfig;
 	}
 
-   public static function getORMProxyDir(){
-
-		return __DIR__.'/../../Storage/cache/doctrine/proxies';
+   public static function getORMProxyDir($root_path){
+		return "{$root_path}/Storage/cache/doctrine/proxies";
 	}
 
 	public static function getORMDefaultCache(){

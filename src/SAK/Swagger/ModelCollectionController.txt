@@ -1,10 +1,9 @@
 <?php
-namespace Sgc\Routes\Controllers;
+namespace NAMESPACE;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Silex\Application;
-use Silex\ControllerProviderInterface;
 
 /**
  * @package SClinica

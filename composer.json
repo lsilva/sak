@@ -1,0 +1,18 @@
+{
+    "name": "lsilva/sac",
+    "keywords": ["silex", "doctrine-orm"],
+    "description": "SAK - Swiss Army Knife",
+    "authors": [
+        {
+            "name": "Luis C Silva"
+        }
+    ],
+    "require": {
+        "php": ">=5.5"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    }
+}

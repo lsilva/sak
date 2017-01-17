@@ -3,19 +3,27 @@ namespace SAK\Swagger;
 
 class SwaggerParse {
     private $swagger_file;
-    private $root_namespace_controller = 'Sgc\\Routes\\controllers\\';
-    private $root_path_controller = __DIR__ . '/../../Routes/controllers/';
+    // private $root_namespace_controller = 'Sgc\\Routes\\controllers\\';
+    private $root_path_controller = '/Routes/controllers/';
+    private $root_path;
 
-    public function __construct($swagger_file) {
-        $this->swagger_file = $swagger_file;
+    public function __construct($root_path) {
+        $this->root_path = $root_path;
+    }
+
+    public static function getDBOptionStatic($root_path){
+        require "{$root_path}/Config/config.php";
+
+        return $swaggerConfig;
     }
 
     private function _getFileContentParsed() {
-        if(!is_file($this->swagger_file)) {
-            throw new \Exception("File documentation not found: {$this->swagger_file}", 1);
+        $swagger_file = "{$this->root_path}/Routes/docs/api-doc.json";
+        if(!is_file($swagger_file)) {
+            throw new \Exception("File documentation not found: {$swagger_file}", 1);
         }
 
-        $file = file_get_contents($this->swagger_file);
+        $file = file_get_contents($swagger_file);
 
         return json_decode($file);
     }
@@ -51,6 +59,7 @@ class SwaggerParse {
     public function getRoutesDefinitions() {
         $oJson = $this->_getFileContentParsed();
         $routes = [];
+        $config = self::getDBOptionStatic($this->root_path);
 
         foreach($oJson->paths as $path_name => $path) {
             $name_route = $this->_getNameRoute($path_name);
@@ -66,10 +75,11 @@ class SwaggerParse {
 
             $result = [];
             $result['pattern'] = $path_name;
-            $result['controller'] = $this->root_namespace_controller . $this->_getNameController($name_route, !$object_type_route);
+            $result['controller'] = $config['namespace_controller'] . '\\' . $this->_getNameController($name_route, !$object_type_route);
 
             // Cria o arquivo de controller se o mesmo não existir
-            $file = $this->root_path_controller . '/' . $name_controller . '.php';
+            $file = "{$this->root_path}{$this->root_path_controller}{$name_controller}.php";
+            // var_dump(is_file($file));exit;
             if(!is_file($file)) {
                 $this->_createDefaultController($name_controller, $path_name, $file, !$object_type_route);
             }
@@ -99,11 +109,14 @@ class SwaggerParse {
      * @return String
      */
     private function _getDefaultController($name_controller, $pattern, $route_type) {
+        $config = self::getDBOptionStatic($this->root_path);
+
         $name_template = ($route_type
             ? '/ModelCollectionController.txt'
             : '/ModelObjectController.txt');
         $controller_model = file_get_contents(__DIR__ . $name_template);
         $controller_model = str_replace('NAMECONTROLLER', $name_controller, $controller_model);
+        $controller_model = str_replace('NAMESPACE', $config['namespace_controller'], $controller_model);
         $controller_model = str_replace('PATTNER', $pattern, $controller_model);
         return $controller_model;
     }
