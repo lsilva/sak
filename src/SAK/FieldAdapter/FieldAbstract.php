@@ -40,4 +40,3 @@ abstract class FieldAbstract {
         return $return;
     }
 }
-}

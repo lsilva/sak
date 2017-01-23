@@ -4,7 +4,7 @@ namespace SAK\Swagger;
 class SwaggerParse {
     private $swagger_file;
     // private $root_namespace_controller = 'Sgc\\Routes\\controllers\\';
-    private $root_path_controller = '/Routes/controllers/';
+    private $root_path_controller = '/Routes/Controllers/';
     private $root_path;
 
     public function __construct($root_path) {
@@ -12,7 +12,11 @@ class SwaggerParse {
     }
 
     public static function getDBOptionStatic($root_path){
-        require "{$root_path}/Config/config.php";
+        $file = is_file("{$root_path}/Config/config.php")
+            ? "{$root_path}/Config/config.php"
+            : "{$root_path}/config/config.php";
+
+        require $file;
 
         return $swaggerConfig;
     }
@@ -47,7 +51,6 @@ class SwaggerParse {
      * @return String
      */
     private function _getNameController($name, $route_type) {
-        // echo $route_type ? '1' : '0';
         $parsed = preg_replace('/(\_|\-)/',' ',$name);
         $parsed = ucwords($parsed);
         $parsed = preg_replace('/\s/','',$parsed);

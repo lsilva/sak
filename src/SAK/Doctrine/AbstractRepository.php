@@ -6,6 +6,14 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
     protected $debbug_query_collection = false;
 
+    protected $fieldAdapter = null;
+
+    protected $entityClass = null;
+
+    protected $path_fieldadapter_default = '%s\Library\FieldAdapter\%sAdapter';
+
+    protected $path_entity_default = '%s\Entity\%s';
+
     public function getPaginateInfo() {
         return $this->objPaginate->getPaginateInfo();
     }
@@ -36,6 +44,40 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
         return $data;
     }
+    /**
+     * Get Enity instance
+     * @return \Api\Entity\CampanhaConveniadaVacina
+     */
+    protected function getEntity() {
+        if(is_null($this->entityClass)) {
+            if(preg_match('/(.*)\\\\Repository\\\\(.*)Repository$/', get_class($this), $matches)) {
+                $className = sprintf($this->path_entity_default, $matches[1], $matches[2]);
+                $this->entityClass = new $className;
+            }
+            else {
+                throw new \Exception("Path entity not found", 500);
+
+            }
+        }
+
+        return $this->entityClass;
+    }
+
+    /**
+     * Obtem o nome do adaptador que será utilizado como interface do banco
+     * @return Object::SAK\FieldAdapter\FieldAbstract
+     */
+    protected function getFieldAdapter() {
+        if(is_null($this->fieldAdapter)) {
+            if(preg_match('/(.*)\\\\Repository\\\\(.*)Repository$/', get_class($this), $matches)) {
+                $className = sprintf($this->path_fieldadapter_default, $matches[1], $matches[2]);
+                $this->fieldAdapter = new $className;
+            }
+        }
+
+        return $this->fieldAdapter;
+    }
+
     /**
      * Obtem a coleção que deve ser retornada
      * @param  Array  $params   # Parametros que serão tratados para obter o resultado

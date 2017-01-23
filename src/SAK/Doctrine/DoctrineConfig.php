@@ -24,7 +24,11 @@ class DoctrineConfig{
 	}
 
 	public static function getDBOptionStatic($root_path){
-		require "{$root_path}/Config/config.php";
+		$file = is_file("{$root_path}/Config/config.php")
+			? "{$root_path}/Config/config.php"
+			: "{$root_path}/config/config.php";
+
+		require $file;
 
 		return $DBOptionConfig;
 	}
