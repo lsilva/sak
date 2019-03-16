@@ -10,9 +10,9 @@
     "require": {
         "php": ">=5.5"
     },
-    "autoload": {
-        "classmap": [
-            "src/"
-        ]
+    "autoload" : {
+      "psr-4" : {
+        "SAK": ["src"]
+      }
     }
 }
