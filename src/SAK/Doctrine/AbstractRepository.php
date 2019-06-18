@@ -83,16 +83,16 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * @param  Array  $params   # Parametros que serão tratados para obter o resultado
      * @return Array
      */
-    public function fetchCollection($params = []) {
+    public function fetchCollection($params = [], $filters = [], $orders = []) {
         $data = [];
         // Obtem a query que deve ser executada
         $collection = $this->getQueryToFeatchCollection();
 
         // Obtem os filtros que devem ser aplicados, considerando os parametros passados
-        $collection = $this->getFilters($collection, $params);
+        $collection = $this->getFilters($collection, $filters);
 
         // Obtem a ordenação que será aplicada, considerando os parametros passados
-        $collection = $this->getOrders($collection, $params);
+        $collection = $this->getOrders($collection, $orders);
 
         // Debuugar a query
         if($this->debbug_query_collection) {
