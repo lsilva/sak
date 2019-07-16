@@ -143,6 +143,23 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
     }
 
     /**
+     * Obtem o valor do campo que devera ser gravado.
+     * @param String    $fieldName      # Nome do campo
+     * @param Array     $arrValues      # Array dos novos valores
+     * @param Array     $arrOldValues   # Array dos valores antigos se for uma atualização
+     */
+    protected function getValueToEntity(string $fieldName, array $arrValues, array $arrOldValues = null) {
+        $value = null;
+        if (array_key_exists($fieldName, $arrValues)) {
+            $value = $arrValues[$fieldName];
+        } elseif ($arrOldValues && array_key_exists($fieldName, $arrOldValues)) {
+            $value = $arrOldValues[$fieldName];
+        }
+
+        return $value;
+    }
+
+    /**
      * Reponsável por montar a clausula orderBy da collection
      * @param \Doctrine\ORM\QueryBuilder $collection  # Query que será atualizada
      * @param Array                      $orders      # Array conténdo os campos que se deseja ordenar
