@@ -2,6 +2,7 @@
     "name": "lsilva/sak",
     "keywords": ["silex", "doctrine-orm"],
     "description": "SAK - Swiss Army Knife",
+    "type": "package",
     "license": "mit",
     "authors": [
         {
