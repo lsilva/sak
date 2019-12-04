@@ -1,5 +1,5 @@
 <?php
-namespace SAK\Doctrine;
+namespace lsilva\SAK\Doctrine;
 
 use Doctrine\DBAL\Logging\SQLLogger,
     Doctrine\DBAL\Types\Type,

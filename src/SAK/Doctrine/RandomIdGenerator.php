@@ -1,5 +1,5 @@
 <?php
-namespace SAK\Doctrine;
+namespace lsilva\SAK\Doctrine;
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
 

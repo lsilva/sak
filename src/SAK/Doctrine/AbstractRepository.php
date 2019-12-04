@@ -1,5 +1,5 @@
 <?php
-namespace SAK\Doctrine;
+namespace lsilva\SAK\Doctrine;
 
 abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
     public $objPaginate;

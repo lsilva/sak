@@ -1,5 +1,5 @@
 <?php
-namespace SAK\Doctrine;
+namespace lsilva\SAK\Doctrine;
 /**
 * Classe reposnavel por fazer a paginação
 */
