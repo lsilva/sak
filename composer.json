@@ -1,5 +1,5 @@
 {
-    "name": "lsilva/sac",
+    "name": "lsilva/sak",
     "keywords": ["silex", "doctrine-orm"],
     "description": "SAK - Swiss Army Knife",
     "license": "mit",
@@ -12,6 +12,7 @@
         "php": ">=5.5",
         "phpoffice/phpexcel": "^1.8"
     },
+    "minimum-stability": "dev",
     "autoload": {
       "psr-4": {
         "SAK\\": "src/"
