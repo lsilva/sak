@@ -2,17 +2,19 @@
     "name": "lsilva/sac",
     "keywords": ["silex", "doctrine-orm"],
     "description": "SAK - Swiss Army Knife",
+    "license": "mit",
     "authors": [
         {
             "name": "Luis C Silva"
         }
     ],
     "require": {
-        "php": ">=5.5"
+        "php": ">=5.5",
+        "phpoffice/phpexcel": "^1.8"
     },
-    "autoload" : {
-      "psr-4" : {
-        "SAK": ["src"]
+    "autoload": {
+      "psr-4": {
+        "SAK\\": "src/"
       }
     }
 }

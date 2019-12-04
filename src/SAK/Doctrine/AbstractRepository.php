@@ -14,6 +14,58 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
     protected $path_entity_default = '%s\Entity\%s';
 
+    protected function getFileNameReturn() {
+		$file_name_return = 'retorno_upload_' . date('Ymd') . '_' . rand(1, 1000) . '.csv';
+		$file_return = realpath('.') . $this->path_download . $file_name_return;
+		return [ 'file_name_return' => $file_name_return, 'file_return' => $file_return ];
+	}
+
+	public function importFromFile($params) {
+		// $file_name_return = 'retorno_upload_' . date('Ymd') . '_' . rand(1, 1000) . '.csv';
+		// $file_return = realpath('.') . $this->path_download . $file_name_return;
+		list($file_name_return, $file_return) = array_values($this->getFileNameReturn());
+		$oReturnFile = fopen($file_return, 'w');
+
+		$adapter = new ImportAdapter($this->getFileManagerAdapter());
+
+		$rows = $adapter->setParams($params)->importFile();
+		$this->importInsertLines($rows, $oReturnFile);
+		$status = $adapter->getContinueProcessStatus();
+		while($status) {
+   		    $rows = $adapter->process();
+		    $this->importInsertLines($rows, $oReturnFile);
+		    $status = $adapter->getContinueProcessStatus();
+		}
+
+	    fclose($oReturnFile);
+
+	    return ['file_name' => $file_name_return];
+	}
+
+	public function importInsertLines($rows, $fileReturn) {
+		foreach($rows as $row) {
+	        try {
+	        	// Prepara o objeto que deverá ser inserido e faz algumas validações basicas
+	        	$aCreate = $this->prepareLineToImport($row);
+
+	        	// var_dump($row, $aCreate);exit;
+
+	        	$message = $aCreate['message'];
+	        	if ($aCreate['status']) {
+	        		$this->create($aCreate['object']);
+	        		$message = 'SUCESSO';
+	        	}
+	        } catch (\Exception $e) {
+	        	$message = $e->getMessage();
+	        } finally {
+	        	$row->message = $message;
+	        	fputcsv($fileReturn, (array) $row);
+	        }
+		}
+
+	    return true;
+	}
+
     public function getPaginateInfo() {
         return $this->objPaginate->getPaginateInfo();
     }
