@@ -16,7 +16,7 @@
     "minimum-stability": "dev",
     "autoload": {
       "psr-4": {
-        "lsilva\\SAK\\": "src/"
+        "lsilva\\SAK\\": "src/SAK"
       }
     }
 }
