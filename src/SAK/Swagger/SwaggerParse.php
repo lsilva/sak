@@ -1,5 +1,5 @@
 <?php
-namespace SAK\Swagger;
+namespace lsilva\SAK\Swagger;
 
 class SwaggerParse {
     private $swagger_file;

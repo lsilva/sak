@@ -1,5 +1,5 @@
 <?php
-namespace SAK\FieldAdapter;
+namespace lsilva\SAK\FieldAdapter;
 
 interface FieldInterface {
     /**

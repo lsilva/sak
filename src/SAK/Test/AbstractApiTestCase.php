@@ -1,5 +1,5 @@
 <?php
-namespace SAK\Test;
+namespace lsilva\SAK\Test;
 
 use \GuzzleHttp\Client;
 
