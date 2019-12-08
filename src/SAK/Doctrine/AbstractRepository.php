@@ -14,21 +14,19 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
     protected $path_entity_default = '%s\Entity\%s';
 
-    protected function getFileNameReturn() {
-		$file_name_return = 'retorno_upload_' . date('Ymd') . '_' . rand(1, 1000) . '.csv';
-		$file_return = realpath('.') . $this->path_download . $file_name_return;
+    protected function getFileNameReturn($pathDownload) {
+		$file_name_return = 'retorno_upload_' . date('YmdHi') . '_' . rand(1, 1000) . '.csv';
+		$file_return = $pathDownload . $file_name_return;
 		return [ 'file_name_return' => $file_name_return, 'file_return' => $file_return ];
 	}
 
-	public function importFromFile($params) {
-		// $file_name_return = 'retorno_upload_' . date('Ymd') . '_' . rand(1, 1000) . '.csv';
-		// $file_return = realpath('.') . $this->path_download . $file_name_return;
-		list($file_name_return, $file_return) = array_values($this->getFileNameReturn());
+	public function importFromFile($fileToImport, $pathDownload) {
+		list($file_name_return, $file_return) = array_values($this->getFileNameReturn($pathDownload));
 		$oReturnFile = fopen($file_return, 'w');
 
-		$adapter = new ImportAdapter($this->getFileManagerAdapter());
+		$adapter = new ImportAdapter($this->getFieldAdapter());
 
-		$rows = $adapter->setParams($params)->importFile();
+		$rows = $adapter->importFile($fileToImport);
 		$this->importInsertLines($rows, $oReturnFile);
 		$status = $adapter->getContinueProcessStatus();
 		while($status) {
@@ -47,8 +45,6 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 	        try {
 	        	// Prepara o objeto que deverá ser inserido e faz algumas validações basicas
 	        	$aCreate = $this->prepareLineToImport($row);
-
-	        	// var_dump($row, $aCreate);exit;
 
 	        	$message = $aCreate['message'];
 	        	if ($aCreate['status']) {

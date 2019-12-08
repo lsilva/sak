@@ -13,9 +13,7 @@ class ImportAdapter {
     private $continue_process;
     private $headers = [];
 
-    public function __construct(\SAK\FieldAdapter\FieldAbstract $adapter) {
-        $this->path_download = realpath(__DIR__.'/../../../../../../../' . $this->path_download) . '/';
-        $this->path_upload = realpath(__DIR__.'/../../../../../../../' . $this->path_upload) . '/';
+    public function __construct(\lsilva\SAK\FieldAdapter\FieldAbstract $adapter) {
         $this->adapter = $adapter;
     }
 
@@ -32,15 +30,14 @@ class ImportAdapter {
         return $this->continue_process;
     }
 
-    public function importFile() {
+    public function importFile($fileToImport) {
         try {
-            $filepath = $this->path_upload . $this->params['file'];
-            $inputFileType = \PHPExcel\PHPExcel_IOFactory::identify($filepath);
-            $objReader = \PHPExcel\PHPExcel_IOFactory::createReader($inputFileType);
-            $this->objPHPExcel = $objReader->load($filepath);
+            $inputFileType = \PHPExcel_IOFactory::identify($fileToImport);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $this->objPHPExcel = $objReader->load($fileToImport);
         }
         catch (\Exception $e) {
-            die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME)
+            die('Error loading file "' . pathinfo($fileToImport, PATHINFO_BASENAME)
             . '": ' . $e->getMessage());
         }
 
@@ -60,6 +57,7 @@ class ImportAdapter {
             $oNewLine = new \Stdclass;
             //  Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+
             $first_line = empty($this->headers);
             foreach($rowData[0] as $k => $v) {
                 if($first_line) {
