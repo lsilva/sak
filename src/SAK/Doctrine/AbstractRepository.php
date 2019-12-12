@@ -195,13 +195,16 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * @param String    $fieldName      # Nome do campo
      * @param Array     $arrValues      # Array dos novos valores
      * @param Array     $arrOldValues   # Array dos valores antigos se for uma atualização
+     * @param Array     $defaultValue   # Valor default para a coluna caso seja um novo registro
      */
-    protected function getValueToEntity(string $fieldName, array $arrValues, array $arrOldValues = null) {
+    protected function getValueToEntity(string $fieldName, array $arrValues, array $arrOldValues = null, $defaultValue = null) {
         $value = null;
         if (array_key_exists($fieldName, $arrValues)) {
             $value = $arrValues[$fieldName];
         } elseif ($arrOldValues && array_key_exists($fieldName, $arrOldValues)) {
             $value = $arrOldValues[$fieldName];
+        } elseif (is_null($arrOldValues) && !is_null($defaultValue)) {
+            $value = $defaultValue;
         }
 
         return $value;
