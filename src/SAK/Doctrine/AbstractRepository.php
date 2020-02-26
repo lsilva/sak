@@ -204,6 +204,22 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
     }
 
     /**
+     * Realiza a atualização do objeto ou insere um novo
+     * @param  Array  $id      # Id do registro que deve ser
+     * @param  Array  $arrValues    # Array dos novos valores
+     * @return Array
+     */
+	public function updateOrCreate($id, $arrValues) {
+		if (empty($id)) {
+			$ret = $this->create($arrValues);
+		} else {
+			$ret = $this->update($id, $arrValues);
+		}
+
+		return $ret;
+	}
+
+    /**
      * Obtem o valor do campo que devera ser gravado.
      * @param String    $fieldName      # Nome do campo
      * @param Array     $arrValues      # Array dos novos valores
