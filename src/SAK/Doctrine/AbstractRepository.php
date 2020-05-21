@@ -283,21 +283,66 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * @param  Array   $data # Conteúdo que se deseja atualizar
      * @return StdClass      # Objeto que foi atualizado
      */
-    abstract public function update($id, $data);
+    public function update($id, $data) {
+        $oldEntity = $this->fetch($id);
+
+        if (!empty($oldEntity)) {
+            $this->_em->getConnection()->beginTransaction();
+            try {
+                $entity = $this->setItemsToEntity($data, null, $oldEntity);
+                $entity->setId($id);
+
+                $this->_em->merge($entity);
+                $this->_em->flush();
+                $this->_em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $this->_em->getConnection()->rollback();
+            }
+        }
+
+        return $this->fetch($entity->getId());
+    }
 
     /**
      * Cria um objeto
      * @param  Array     $data    # Conteúdo do objeto que será guardado
      * @return StdClass           # Objeto que foi persistido
      */
-    abstract public function create($data);
+    public function create($data) {
+        $this->validParams($data);
+
+        $this->_em->getConnection()->beginTransaction();
+        try {
+            $entity = $this->setItemsToEntity($data, $this->getEntity());
+
+            $this->_em->persist($entity);
+            $this->_em->flush();
+
+            $this->_em->getConnection()->commit();
+        } catch (\Exception $e) {
+            $this->_em->getConnection()->rollback();
+            // Se for erro de SQL trata para a mensagem não ficar muito grande
+            $message = $e->getMessage();
+            if(!empty(preg_match('/SQLSTATE(.*)/', $message, $matches))) {
+                $message = $matches[0];
+            }
+
+            throw new \Exception($message);
+        }
+
+        return $this->fetch($entity->getId());
+    }
 
     /**
      * Obtem um registro
      * @param $id
      * @return StdClass
      */
-    abstract public function fetch($id);
+    public function fetch($id) {
+        return $this->findOneById([
+            'id' => $id,
+        ]);
+    }
 
     protected function getAttr($class, $attr) {
         $value = null;
