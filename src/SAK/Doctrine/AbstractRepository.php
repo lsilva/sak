@@ -318,6 +318,8 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
             $this->_em->persist($entity);
             $this->_em->flush();
 
+            $this->postInsert($entity->getId(), $data);
+
             $this->_em->getConnection()->commit();
         } catch (\Exception $e) {
             $this->_em->getConnection()->rollback();
@@ -342,6 +344,47 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
         return $this->findOneById([
             'id' => $id,
         ]);
+    }
+
+    /**
+     * postInsert
+     * Método executado após obter o id da entidade que sera inserida
+     *
+     * @param  integer $id
+     * @param  mixed $data      # Valores passados para inserção
+     * @return void
+     */
+    public function postInsert($id, $data) {}
+
+    /**
+     * setItemsToEntity
+     *
+     * Preenche a entidade com os valores passados
+     *
+     * @param  mixed $aValues
+     * @param  mixed $entity
+     * @param  mixed $oldEntity
+     * @return Object
+     */
+    protected function setItemsToEntity($aValues, $entity = null, $oldEntity = null) {}
+
+    /**
+     * validParams
+     * Validação dos parametros passados
+     *
+     * @param  Array     $params    # Conteúdo do objeto que será guardado
+     * @return Boolean
+     */
+    protected function validParams($params) {
+        // TODO: Obter esses campos a partir da documentação
+        $requiredFields = [];
+
+        $diff = array_diff($requiredFields, array_keys($params));
+        if (!empty($diff)) {
+            throw new \Exception("Os seguintes campos são obrigatórios: " . implode(', ', $diff), 1);
+        }
+
+        return true;
     }
 
     protected function getAttr($class, $attr) {
