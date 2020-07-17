@@ -295,7 +295,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
                 $this->_em->merge($entity);
                 $this->_em->flush();
 
-                $this->postUpdate($entity->getId(), $data);
+                $this->postUpdate($entity, $data);
 
                 $this->_em->getConnection()->commit();
             } catch (\Exception $e) {
@@ -367,7 +367,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * @param  mixed $data      # Valores passados para inserção
      * @return void
      */
-    public function postUpdate($id, $data) {}
+    public function postUpdate($entity, $data) {}
 
     /**
      * setItemsToEntity
