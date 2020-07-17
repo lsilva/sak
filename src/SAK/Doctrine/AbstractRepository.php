@@ -300,6 +300,8 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
                 $this->_em->getConnection()->commit();
             } catch (\Exception $e) {
                 $this->_em->getConnection()->rollback();
+
+                throw new \Exception($e->getMessage(), 400);
             }
         }
 
@@ -332,7 +334,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
                 $message = $matches[0];
             }
 
-            throw new \Exception($message);
+            throw new \Exception($message, 400);
         }
 
         return $this->fetch($entity->getId());
