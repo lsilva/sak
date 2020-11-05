@@ -128,7 +128,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * Obtem o nome do adaptador que será utilizado como interface do banco
      * @return Object::SAK\FieldAdapter\FieldAbstract
      */
-    protected function getFieldAdapter() {
+    public function getFieldAdapter() {
         if(is_null($this->fieldAdapter)) {
             if(preg_match('/(.*)\\\\Repository\\\\(.*)Repository$/', get_class($this), $matches)) {
                 $className = sprintf($this->path_fieldadapter_default, $matches[1], $matches[2]);
@@ -161,6 +161,14 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
             exit;
         }
 
+		if (!is_null($this->getAttr($params, 'download'))) {
+			$adapter = new ExportAdapter($this->getFieldAdapter(), $this);
+
+			$adapter->setParams($params)->setQueryCollection($collection);
+
+			return $adapter->genarateDownloadFile();
+        }
+die('passou');
         $this->objPaginate = new Paginate();
         $collection = $this->objPaginate->getFormattedQuery($collection);
 
@@ -183,7 +191,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * @param  Array  $fields  # Campos permitidos para serem retornados
      * @return Array
      */
-    protected function getItemsToReturn(array $row, array $fields) {
+    public function getItemsToReturn(array $row, array $fields) {
         $rowReturn = $row;
 
         foreach ($row as $k => $v) {
