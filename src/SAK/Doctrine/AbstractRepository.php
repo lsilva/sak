@@ -168,7 +168,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
 			return $adapter->genarateDownloadFile();
         }
-die('passou');
+
         $this->objPaginate = new Paginate();
         $collection = $this->objPaginate->getFormattedQuery($collection);
 
