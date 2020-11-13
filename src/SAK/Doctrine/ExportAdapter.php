@@ -94,20 +94,21 @@ class ExportAdapter {
     private function genarateCSVFile() {
         $oExcel = new \PHPExcel();
         $oExcel->getProperties()
-            ->setCreator("API SGC VACINAR")
+            ->setCreator("Relatorio Automatico SAK")
             ->setTitle("Relatorio")
             ->setSubject("Relatório gerado automaticamente")
         // ->setDescription("Test document for PHPExcel, generated using PHP classes.")
             ->setKeywords("office PHPExcel php");
 
-        $fields = $this->getRepository()->getFieldAdapter()->getIds();
-        $header = $this->getRepository()->getFieldAdapter()->getHeaders();
+        $headersToImport = $this->getRepository()->getFieldAdapter()->getHeadersToImport();
+        $fields = array_keys($headersToImport);
+        $header = array_values($headersToImport);
 
         $oExcel = $this->getPHPExcelRow($oExcel, 1, $header);
         $num = 2;
         $result = $this->getQueryCollection()->getQuery()->getResult();
         foreach ($result as $row) {
-            $aLine = $this->getRepository()->getItemsToReturn($row, $fields, true);
+            $aLine = @$this->getRepository()->getItemsToReturn($row, $fields);
 
             $line = [];
             foreach ($aLine as $k => $v) {
