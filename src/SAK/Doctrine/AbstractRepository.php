@@ -144,7 +144,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
      * @param  Array  $params   # Parametros que serão tratados para obter o resultado
      * @return Array
      */
-    public function fetchCollection($params = [], $filters = [], $orders = []) {
+    public function fetchCollection($params = [], $filters = [], $orders = [], $page = 1, $limit = 100) {
         $data = [];
         // Obtem a query que deve ser executada
         $collection = $this->getQueryToFeatchCollection();
@@ -170,7 +170,11 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
         }
 
         $this->objPaginate = new Paginate();
-        $collection = $this->objPaginate->getFormattedQuery($collection);
+        $collection = $this->objPaginate->getFormattedQuery($collection, $page, $limit);
+
+        $collection->setMaxResults($limit);
+
+        $collection->setFirstResult(($page - 1) * $limit);
 
         $result = $collection->getQuery()->getScalarResult();
 
