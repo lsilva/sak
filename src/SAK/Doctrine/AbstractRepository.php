@@ -76,7 +76,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
     }
 
     public function getPaginateInfo() {
-        return $this->objPaginate->getPaginateInfo();
+        return $this->objPaginate ? $this->objPaginate->getPaginateInfo() : null;
     }
 
     /**
