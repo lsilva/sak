@@ -416,7 +416,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
     protected function getAttr($class, $attr) {
         $value = null;
-        if (property_exists($class, $attr)) {
+        if ($class && property_exists($class, $attr)) {
             $value = $class->{$attr};
         }
 
