@@ -313,7 +313,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
             } catch (\Exception $e) {
                 $this->_em->getConnection()->rollback();
 
-                throw new \Exception($e->getMessage(), 400);
+                throw new \Exception($e->getMessage(), ($e->getCode() ? $e->getCode() : 400));
             }
         }
 
@@ -346,7 +346,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
                 $message = $matches[0];
             }
 
-            throw new \Exception($message, 400);
+            throw new \Exception($message, ($e->getCode() ? $e->getCode() : 400));
         }
 
         return $this->fetch($entity->getId());
