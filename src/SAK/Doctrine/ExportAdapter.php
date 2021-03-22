@@ -114,7 +114,7 @@ class ExportAdapter {
             foreach ($aLine as $k => $v) {
                 $key = array_search($k, $fields);
                 if ($key !== false) {
-                    $line[$key] = $v;
+                    $line[$key] = utf8_encode($v);
                 }
             }
             ksort($line);
