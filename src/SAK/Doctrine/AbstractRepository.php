@@ -161,7 +161,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
             exit;
         }
 
-		if (!is_null($this->getAttr($params, 'download'))) {
+		if ($params && !is_null($this->getAttr($params, 'download'))) {
 			$adapter = new ExportAdapter($this->getFieldAdapter(), $this);
 
 			$adapter->setParams($params)->setQueryCollection($collection);
