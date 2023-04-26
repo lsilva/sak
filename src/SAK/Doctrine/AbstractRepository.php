@@ -316,6 +316,9 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
                 throw new \Exception($e->getMessage(), ($e->getCode() ? $e->getCode() : 400));
             }
         }
+        else {
+            throw new \Exception('Registro nao encontrado '.$id, 400);
+        }
 
         return $this->fetch($entity->getId());
     }
