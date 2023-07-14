@@ -114,7 +114,7 @@ class ExportAdapter {
             foreach ($aLine as $k => $v) {
                 $key = array_search($k, $fields);
                 if ($key !== false) {
-                    $line[$key] = utf8_encode($v);
+                    $line[$key] = ($v === false ? '' : utf8_encode($v));
                 }
             }
             ksort($line);
@@ -142,7 +142,7 @@ class ExportAdapter {
 
             $col_name = $prefix_col . chr($col_base + ($col++)) . $nLine;
             $oExcel->setActiveSheetIndex(0)
-                ->setCellValue($col_name, $value);
+                ->setCellValue($col_name, ($value === false ? '' : $value));
         }
 
         return $oExcel;
