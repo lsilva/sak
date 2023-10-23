@@ -140,6 +140,25 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
     }
 
     /**
+     * Retorna a consulta que seria gerado com a função fetchCollection
+     * @param  Array  $params   # Parametros que serão tratados para obter o resultado
+     * @return Array
+     */
+    public function getQuerySql($params = [], $filters = [], $orders = []) {
+        $data = [];
+        // Obtem a query que deve ser executada
+        $collection = $this->getQueryToFeatchCollection();
+
+        // Obtem os filtros que devem ser aplicados, considerando os parametros passados
+        $collection = $this->getFilters($collection, $filters);
+
+        // Obtem a ordenação que será aplicada, considerando os parametros passados
+        $collection = $this->getOrders($collection, $orders);
+
+        return $collection->getQuery()->getSql();
+    }
+
+    /**
      * Obtem a coleção que deve ser retornada
      * @param  Array  $params   # Parametros que serão tratados para obter o resultado
      * @return Array
