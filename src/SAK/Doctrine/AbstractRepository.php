@@ -155,7 +155,7 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
         // Obtem a ordenação que será aplicada, considerando os parametros passados
         $collection = $this->getOrders($collection, $orders);
 
-        return $collection->getQuery()->getSql();
+        return EchoWriteSQLWithoutParamsString::getFullSQL($collection->getQuery());
     }
 
     /**
