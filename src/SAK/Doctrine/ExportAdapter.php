@@ -5,6 +5,7 @@ use \PHPExcel;
 use \PHPExcel\PHPExcel_IOFactory;
 use lsilva\SAK\Doctrine\AbstractRepository;
 use lsilva\SAK\FieldAdapter\FieldAbstract;
+use \ForceUTF8\Encoding;
 
 class ExportAdapter {
     private $adapter;
@@ -114,7 +115,7 @@ class ExportAdapter {
             foreach ($aLine as $k => $v) {
                 $key = array_search($k, $fields);
                 if ($key !== false) {
-                    $line[$key] = ($v === false ? '' : utf8_encode($v));
+                    $line[$key] = ($v === false ? '' : Encoding::toUTF8($v));
                 }
             }
             ksort($line);
