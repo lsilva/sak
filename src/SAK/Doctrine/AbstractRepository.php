@@ -6,6 +6,8 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
     protected $debbug_query_collection = false;
 
+    protected $no_pagination = false;
+
     protected $fieldAdapter = null;
 
     protected $entityClass = null;
@@ -188,8 +190,10 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 			return $adapter->genarateDownloadFile();
         }
 
-        $this->objPaginate = new Paginate();
-        $collection = $this->objPaginate->getFormattedQuery($collection, $page, $limit);
+        if(!$this->no_pagination) {
+            $this->objPaginate = new Paginate();
+            $collection = $this->objPaginate->getFormattedQuery($collection, $page, $limit);
+        }
 
         $collection->setMaxResults($limit);
 
@@ -249,6 +253,15 @@ abstract class AbstractRepository extends \Doctrine\ORM\EntityRepository {
 
 		return $ret;
 	}
+
+    /**
+     * Seta a variavel para não utilizar paginação no 
+     * retorno do metodo fetchCollection
+     */
+    public function setNoPagination() {
+        $this->no_pagination = true;
+        return $this;
+    }
 
     /**
      * Obtem o valor do campo que devera ser gravado.
